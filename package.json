@@ -7,7 +7,7 @@
     "temp": "cross-env NODE_ENV=development nodemon ./temp.js",
     "dev": "cross-env NODE_ENV=development cross-env PORT=3030 nodemon ./server.js",
     "test": "cross-env NODE_ENV=test cross-env PORT=3031 nodemon ./server.js",
-    "server": "cross-env NODE_ENV=production cross-env PORT=3032 node ./server.js"
+    "start": "cross-env NODE_ENV=production cross-env PORT=3032 node ./server.js"
   },
   "author": "",
   "license": "ISC",
@@ -16,6 +16,7 @@
     "koa": "^2.5.2",
     "koa-body": "^4.0.4",
     "koa-bodyparser": "^4.2.1",
+    "koa-cors": "^0.0.16",
     "koa-router": "^7.4.0",
     "mysql": "^2.16.0"
   }

@@ -1,6 +1,6 @@
 const envs = {
   development: {
-    port:3031,
+    port:3030,
     baseURL : 'http://120.79.154.244:3030',
     database: {
       host     : 'localhost',
@@ -12,7 +12,7 @@ const envs = {
     }
   },
   test: {
-    port:3032,
+    port:3031,
     baseURL :'http://120.79.154.244:3031',
     database: {
       host     : 'localhost',
@@ -22,7 +22,7 @@ const envs = {
     }
   },
   production: {
-    port:3031,
+    port:3032,
     baseURL : 'http://120.79.154.244:3030',
     database: {
       host     : 'localhost',

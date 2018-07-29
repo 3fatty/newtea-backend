@@ -1,0 +1,22 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "node server",
+  "main": "server.js",
+  "scripts": {
+    "temp": "cross-env NODE_ENV=development nodemon ./temp.js",
+    "dev": "cross-env NODE_ENV=development nodemon ./server.js",
+    "test": "cross-env NODE_ENV=test nodemon ./server.js",
+    "server": "cross-env NODE_ENV=production node ./server.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cross-env": "^5.2.0",
+    "koa": "^2.5.2",
+    "koa-body": "^4.0.4",
+    "koa-bodyparser": "^4.2.1",
+    "koa-router": "^7.4.0",
+    "mysql": "^2.16.0"
+  }
+}

@@ -1,0 +1,44 @@
+create database newtea;
+
+use newtea;
+
+// 用户表
+create table user (
+  id int unsigned auto_increment,
+  mobile varchar(32) not null,
+  psw varchar(128),
+  type tinyint(3) unsigned not null,
+  vip date,
+  platform tinyint(3) unsigned not null,
+  comments text,
+  primary key(id)
+);
+// 商品
+create table goods (
+  id int unsigned auto_increment,
+  shop int unsigned not null,
+  name varchar(32) not null,
+  price float not null,
+  images text not null,
+  invite int unsigned,
+  description text,
+  comments text,
+  primary key(id)
+);
+// 商店
+create table shop (
+  id int unsigned auto_increment,
+  name varchar(64) not null,
+  images text not null,
+  agent text,
+  goods text,
+  primary key(id)
+);
+// 评论
+create table comment (
+  id int unsigned auto_increment,
+  user int unsigned not null,
+  goods int unsigned not null,
+  content text not null,
+  primary key(id)
+);

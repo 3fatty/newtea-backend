@@ -4,7 +4,7 @@ let router = new (require('koa-router'))()
 let bodyParser = require('koa-bodyparser')
 let format = require('./utils/format')
 let host   = '0.0.0.0'
-let port   = 3030
+let port   = process.env.PORT
 
 let fs       = require('fs')
 let homepage = fs.readFileSync('./index.html','utf-8')

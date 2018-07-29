@@ -10,7 +10,7 @@
     html,body,#__root { height:100%; }
     html { font-size:14px; color:#333; }
     table { width:100%; border-collapse:collapse; }
-    table td { height:30px; text-align:center; border:1px solid #ddd; }
+    table td { height:30px; text-align:center; border:1px solid #ddd; word-break:keep-all; }
     table td input { min-width:0; width:100%; height:30px; text-align:center; border:0 none; box-shadow:0 0 3px 2px inset lightskyblue;}
     table td input[data-required] { box-shadow:0 0 3px 2px inset lightpink; }
     table td input:read-only { box-shadow:none; }
@@ -22,7 +22,7 @@
     #sidebar { padding:20px 0; width:150px; background:#eee; text-align:center; }
     #sidebar li { line-height:40px; cursor:pointer; }
     #sidebar li.focus { background:lightskyblue; }
-    #page-main { padding:15px; }
+    #page-main { padding:15px; overflow:auto; }
     .btn-wrapper {
     }
     .btn-wrapper a {
@@ -46,29 +46,38 @@
       </ul>
     </div>
     <div id="page-main" class="flex-1">
-      <table v-if="tables[index]">
+      <table v-if="table">
         <thead>
           <tr>
-            <td v-for="item in tables[index].format">{{item.title}}</td>
+            <td v-for="item in table.format">{{item.title}}</td>
+            <td>操作</td>
           </tr>
         </thead>
         <tbody>
-            <tr v-for="item in tables[index].list">
-              <td v-for="f in tables[index].format">
+            <tr v-for="(item,i) in table.list">
+              <td v-for="f in table.format">
                 {{item[f.field]}}
+              </td>
+              <td>
+                <a href="javascript:void(0);" @click="del(i)">删除</a>
               </td>
             </tr>
             <tr class="dataInsert">
-              <td v-for="item in tables[index].format">
-                <input type="text" readonly v-if="item.field==='id'" :value="tables[index].list.length+1">
+              <td v-for="item in table.format">
+                <input type="text" readonly v-if="item.field==='id'"
+                :value="table.list[table.list.length-1]?table.list[table.list.length-1].id+1:1"
+                >
                 <input type="text" v-model.trim="item.value" v-else :data-required="item.required">
+              </td>
+              <td>
+                <a href="javascript:void(0);" @click="insertData">新增</a>
               </td>
             </tr>
         </tbody>
       </table>
-      <div class="btn-wrapper">
+      <!--<div class="btn-wrapper">
         <a href="javascript:void(0);" @click="insertData">添加数据</a>
-      </div>
+      </div>-->
     </div>
   </div>
   <script src="https://cdn.jsdelivr.net/npm/vue"></script>
@@ -119,6 +128,7 @@
                 { field:'images', title:'图片',   required:true,   value:'' },
                 { field:'agent',  title:'代理',   required:false,   value:'' },
                 { field:'goods',  title:'商品',   required:false,   value:'' },
+                { field:'pos',    title:'位置',   required:false,   value:'' },
               ]
             },
           ]
@@ -135,16 +145,25 @@
         },
         switchTab(idx) {
           this.index = idx;
-          this.queryTable(idx,'list')
+          this.queryTable('list')
         },
-        queryTable(idx,op) {
-          let table = this.tables[idx];
-          axios.post(`/sql/${table.name}/${op}`)
+        queryTable(op,data={},opt={}) {
+          let table = this.table;
+          axios.post(`/sql/${table.name}/${op}`,data)
           .then(resp=>{
             if ( resp.state === 0 ) return console.error(resp.err);
-            table.list = resp.data.data;
+            if ( op === 'list' ) {
+              table.list = resp.data.data;
+            }
+            if ( opt.refresh ) {
+              this.queryTable('list')
+            }
             // console.log( resp.data.data )
           })
+        },
+        del(idx) {
+          let id = this.table.list[idx].id
+          this.queryTable('del',{id},{refresh:true})
         },
         insertData() {
           let table = this.table;
@@ -166,15 +185,28 @@
           // if ( error ) alert(error);
           if ( error ) return console.error(error);
 
-          axios.post(`/sql/${table.name}/add`, data)
-            .then(resp=>{
+          this.queryTable('add',data,{
+            success:(resp)=>{
               if ( resp.data.state !== 1 ) {
                 console.error('插入数据失败')
               } else {
                 console.log('插入数据成功')
-                this.queryTable(this.index,'list')
+                // this.queryTable('list')
               }
-            })
+            },
+            refresh:true
+          })
+
+
+          // axios.post(`/sql/${table.name}/add`, data)
+          //   .then(resp=>{
+          //     if ( resp.data.state !== 1 ) {
+          //       console.error('插入数据失败')
+          //     } else {
+          //       console.log('插入数据成功')
+          //       this.queryTable('list')
+          //     }
+          //   })
         }
       },
       mounted() {

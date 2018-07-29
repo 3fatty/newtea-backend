@@ -14,7 +14,6 @@ function add(database,table,data) {
       return item.type.indexOf('int')>=0||item.type.indexOf('float')>=0?
         temp: `"${temp}"`
     } else {
-      console.log(item);
       if ( item.required ) err={state:0,err:'参数错误'}
       else return 'null'
     }
@@ -34,11 +33,19 @@ function add(database,table,data) {
   });
 }
 // 删除
-function del() {
+function del(database,table,data) {
+  console.log(`delete from ${table.name} where id=${data.id}`)
 
+  return new Promise(function(resolve,reject) {
+    database.query(`delete from ${table.name} where id=${data.id}`, function(err,res,fields) {
+      if (err) reject({state:0, err:err.toString()})
+      else resolve({state:1, data:res})
+    })
+  })
 }
 // 查看
 function list( database,table,data ) {
+  console.log( `select * from ${table.name}` )
   return new Promise(function(resolve,reject) {
     database.query(`select * from ${table.name}`, function(err,res,fields) {
       if (err) reject({state:0, err:err.toString()})
@@ -53,5 +60,5 @@ function update() {
 
 
 module.exports = {
-  add,list
+  add,list,del
 }

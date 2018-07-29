@@ -8,6 +8,7 @@ var fields = [
   { name:'images', type:'text', required:true },
   { name:'agent', type:'text', required:false },
   { name:'goods', type:'text', required:false },
+  { name:'pos', type:'varchar(32)', required:false },
 ]
 
 function add(data) {
